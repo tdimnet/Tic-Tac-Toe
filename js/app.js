@@ -18,7 +18,6 @@ player1.className = 'players active';
 
 
 
-
 /*************** Removing DOM Elements ***************/
 start.style.display = 'none';
 board.style.display = 'block';
@@ -41,12 +40,11 @@ startButton.addEventListener('click', (event) => {
     board.style.display = 'block';
 });
 
-for (let i = 0; i < boxElts.length; i++) {
-    boxElts[i].addEventListener('click', () => {
-        boxElts[i].style.backgroundColor.hover = 'red';
-        
-    });
-}
+
+boxesElt.addEventListener('click', (event) => {
+    let target = event.target;
+    target.style.backgroundColor = 'red';
+});
 
 
 newGameButton.addEventListener('click', (event) => {
