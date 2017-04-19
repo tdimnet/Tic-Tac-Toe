@@ -3,15 +3,33 @@ const start = document.getElementById('start');
 const startButton = start.querySelector('.button');
 
 const board = document.getElementById('board');
+const player1 = document.getElementById('player1');
+const player2 = document.getElementById('player2');
+const boxesElt = document.querySelector('.boxes');
+const boxElts = boxesElt.getElementsByClassName('box');
 
 const finish = document.getElementById('finish');
 const newGameButton = finish.querySelector('.button');
 
 
 
+/*************** Add classes and attributes ***************/
+player1.className = 'players active';
+
+
+
+
 /*************** Removing DOM Elements ***************/
-board.style.display = 'none';
+start.style.display = 'none';
+board.style.display = 'block';
 finish.style.display = 'none';
+
+
+
+/*************** Creating the functions needed ***************/
+
+
+
 
 
 
@@ -23,11 +41,13 @@ startButton.addEventListener('click', (event) => {
     board.style.display = 'block';
 });
 
+for (let i = 0; i < boxElts.length; i++) {
+    boxElts[i].addEventListener('click', () => {
+        boxElts[i].style.backgroundColor.hover = 'red';
+        
+    });
+}
 
-board.addEventListener('click', () => {
-    board.style.display = 'none';
-    finish.style.display = 'block';
-});
 
 newGameButton.addEventListener('click', (event) => {
     event.preventDefault();
