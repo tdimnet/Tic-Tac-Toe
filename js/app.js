@@ -19,7 +19,6 @@ const newGameButton = finish.querySelector('.button');
 
 
 
-
 /*************** Changing DOM Elements ***************/
 start.style.display = 'none';
 board.style.display = 'block';
@@ -28,24 +27,29 @@ finish.style.display = 'none';
 
 
 /*************** Creating the functions needed ***************/
-function Player(name, color, isPlaying) {
+function Player(name, image, isPlaying) {
     this.name = name;
-    this.color = color;
+    this.image = image;
     this.isPlaying = isPlaying;
 }
+firstPlayer = new Player("Player 1", "url(img/x.svg)", true);
+secondPlayer = new Player("Player 2", "url(img/o.svg)", false);
 
 
 function turnPlayer(boxChoosen) {
-    // console.log(boxChoosen);
     if (firstPlayer.isPlaying == false) {
-        boxChoosen.style.backgroundColor = firstPlayer.color;
+        boxChoosen.style.backgroundImage = firstPlayer.image;
+        boxChoosen.className = "box play1"
+
         firstPlayer.isPlaying = true;
         player1.className = "players active";
 
         secondPlayer.isPlaying = false;
         player2.className = "players";
     } else {
-        boxChoosen.style.backgroundColor = secondPlayer.color;
+        boxChoosen.style.backgroundImage = secondPlayer.image;
+        boxChoosen.className = "box play2";
+
         secondPlayer.isPlaying = true;
         player2.className = "players active";
 
@@ -55,10 +59,12 @@ function turnPlayer(boxChoosen) {
     }
 }
 
-firstPlayer = new Player("Player 1", "red", true);
-secondPlayer = new Player("Player 2", "blue", false);
 
-
+window.onload = () => {
+    // By default player1 is active (for now ;) )
+    player1.className = "players active";
+    firstPlayer.isPlaying = true;
+}
 
 /*************** Adding the event handlers ***************/
 boxContainer.addEventListener('mouseover', (event) => {
