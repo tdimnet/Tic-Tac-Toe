@@ -14,7 +14,7 @@ const newGameButton = finish.querySelector('.button');
 
 
 /*************** Add classes and attributes ***************/
-player1.className = 'players active';
+
 
 
 
@@ -30,8 +30,6 @@ finish.style.display = 'none';
 
 
 
-
-
 /*************** Adding the event handlers ***************/
 
 startButton.addEventListener('click', (event) => {
@@ -43,7 +41,20 @@ startButton.addEventListener('click', (event) => {
 
 boxesElt.addEventListener('click', (event) => {
     let target = event.target;
-    target.style.backgroundColor = 'red';
+
+    
+    // target.id = 'checked';
+    if (target.className === 'box checked') {
+        console.log('foo');
+        target.style.backgroundColor = "blue";
+    } else {
+        console.log('bar');
+        target.style.backgroundColor = "red";
+    }
+
+    console.log(target)
+
+
 });
 
 
