@@ -34,9 +34,8 @@ function Player(name, image, playerColor, isPlaying) {
     this.playerColor = playerColor;
     this.isPlaying = isPlaying;
 }
-firstPlayer = new Player("Player 1", "url(img/x.svg)", "#FFA000", true);
-secondPlayer = new Player("Player 2", "url(img/o.svg)", "#3688C3" ,false);
-
+firstPlayer = new Player("Player 1", "url(img/x.svg)", "#3688C3", true);
+secondPlayer = new Player("Player 2", "url(img/o.svg)", "#FFA000" ,false);
 
 
 function turnPlayer(boxChoosen) {
@@ -65,6 +64,26 @@ function turnPlayer(boxChoosen) {
     }
 }
 
+function mouseInBoxes(boxChoosen) {
+    if (!(boxChoosen.className === "box play1") && !(boxChoosen.className === "box play2")) {
+        if (firstPlayer.isPlaying == false) {
+        boxChoosen.style.backgroundColor = firstPlayer.playerColor;
+        boxChoosen.style.backgroundImage = firstPlayer.image;
+
+        } else {
+            boxChoosen.style.backgroundColor = secondPlayer.playerColor;
+            boxChoosen.style.backgroundImage = secondPlayer.image;
+        }
+    }
+}
+
+function mouseoutBoxes(boxChoosen) {
+    if (!(boxChoosen.className === "box play1") && !(boxChoosen.className === "box play2")) {
+        boxChoosen.style.backgroundColor = '#EFEFEF';
+        boxChoosen.style.backgroundImage = '';
+    }
+}
+
 
 window.onload = () => {
     // By default player1 is active (for now ;) )
@@ -74,17 +93,14 @@ window.onload = () => {
 
 /*************** Adding the event handlers ***************/
 boxContainer.addEventListener('mouseover', (event) => {
-    
     let targetBox = event.target;
-    
-
+    mouseInBoxes(targetBox);
 });
 
 boxContainer.addEventListener('mouseout', (event) => {
 
     let targetBox = event.target;
-    
-
+    mouseoutBoxes(targetBox);
 });
 
 
