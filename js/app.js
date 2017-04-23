@@ -39,6 +39,7 @@ secondPlayer = new Player("Player 2", "url(img/o.svg)", "#FFA000" ,false);
 
 
 function turnPlayer(boxChoosen) {
+    
     if (firstPlayer.isPlaying == false) {
         boxChoosen.style.backgroundColor = firstPlayer.playerColor;
         boxChoosen.style.backgroundImage = firstPlayer.image;
@@ -108,9 +109,8 @@ boxContainer.addEventListener('mouseout', (event) => {
 boxContainer.addEventListener('click', (event) => {
     
     let targetBox = event.target;
-    targetBox.className = 'box checked'
 
-    turnPlayer(targetBox);
-    
-
+    if (!(targetBox.className === "box play1") && !(targetBox.className === "box play2")) {
+        turnPlayer(targetBox);
+    }
 });
