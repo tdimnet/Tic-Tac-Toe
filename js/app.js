@@ -19,6 +19,7 @@ const newGameButton = finish.querySelector('.button');
 
 
 
+
 /*************** Changing DOM Elements ***************/
 start.style.display = 'none';
 board.style.display = 'block';
@@ -27,18 +28,22 @@ finish.style.display = 'none';
 
 
 /*************** Creating the functions needed ***************/
-function Player(name, image, isPlaying) {
+function Player(name, image, playerColor, isPlaying) {
     this.name = name;
     this.image = image;
+    this.playerColor = playerColor;
     this.isPlaying = isPlaying;
 }
-firstPlayer = new Player("Player 1", "url(img/x.svg)", true);
-secondPlayer = new Player("Player 2", "url(img/o.svg)", false);
+firstPlayer = new Player("Player 1", "url(img/x.svg)", "#FFA000", true);
+secondPlayer = new Player("Player 2", "url(img/o.svg)", "#3688C3" ,false);
+
 
 
 function turnPlayer(boxChoosen) {
     if (firstPlayer.isPlaying == false) {
+        boxChoosen.style.backgroundColor = firstPlayer.playerColor;
         boxChoosen.style.backgroundImage = firstPlayer.image;
+        
         boxChoosen.className = "box play1"
 
         firstPlayer.isPlaying = true;
@@ -46,7 +51,9 @@ function turnPlayer(boxChoosen) {
 
         secondPlayer.isPlaying = false;
         player2.className = "players";
+
     } else {
+        boxChoosen.style.backgroundColor = secondPlayer.playerColor;
         boxChoosen.style.backgroundImage = secondPlayer.image;
         boxChoosen.className = "box play2";
 
@@ -55,7 +62,6 @@ function turnPlayer(boxChoosen) {
 
         firstPlayer.isPlaying = false;
         player1.className = "players";
-        
     }
 }
 
@@ -70,18 +76,14 @@ window.onload = () => {
 boxContainer.addEventListener('mouseover', (event) => {
     
     let targetBox = event.target;
-    // targetBox.style.backgroundColor = "red";
-    // player1.className = "players active";
-    // player2.className = "players";
+    
 
 });
 
 boxContainer.addEventListener('mouseout', (event) => {
 
     let targetBox = event.target;
-    // targetBox.style.backgroundColor = "#EFEFEF";
-    // player1.className = "players";
-    // player2.className = "players active";
+    
 
 });
 
