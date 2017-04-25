@@ -70,15 +70,10 @@ function turnPlayer(boxChoosen) {
         firstPlayer.isPlaying = false;
         player1.className = "players";
     }
-    winningSituation();
+    
 } // End: turnPlayer
 
 function winningSituation() {
-    console.log(boxes[0].className, boxes[1].className, boxes[2].className);
-    if (boxes[0].className === boxes[1].className && boxes[1].className === boxes[2].className) {
-        console.log('it works!');
-        console.log(boxes[0].className);
-    }
     
 }
 
