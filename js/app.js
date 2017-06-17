@@ -148,11 +148,44 @@
         return win;
       }, // end: winningSituation
 
+      playMove: function(aMove) {
+        if ((aMove => 0 && aMove <= 8) && (this.board[aMove] === 0)) {
 
-    }
+          this.board[aMove] = this.currentPlayer;
+          const status = this.winningSituation();
 
+          if (status === 0) {
+            if (this.numberOfMovesLeft() > 0) {
+              if (this.currentPlayer === 1) {
+                this.currentPlayer = 2;
+              } else {
+                this.currentPlayer = 1;
+              }
+              return 0;
+            } else {
+              return 3;
+            }
+          } else {
+            this.players[status-1].score++;
+            return status;
+          }
 
+        } else {
+          return 9;
+        }
+      }, // end: playMove
 
+      pickAiMove: function() {
+        var availMoves = [];
+        for (var i = 0; i < this.board.length; i++) {
+          if (this.board[i] === 0) {
+            availMoves.push(i);
+          }
+        }
+        return availMoves[Math.floor(Math.random() * availMoves.length)];
+      }
+    }; // end: gameObject.prototype
+    return gameObject;
   })(); // End: gameObject
 
 
