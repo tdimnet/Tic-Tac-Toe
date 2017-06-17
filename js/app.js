@@ -1,4 +1,4 @@
-(function() {
+(() => {
 
   const startView = `
     <div class="screen screen-start" id="start">
@@ -55,7 +55,7 @@
 
 
   // The Player Object
-  const playerObject = (function() {
+  const playerObject = (() => {
     function playerObject(initialName, initialScore) {
       this.name = initialName || "None";
       this.score = initialScore || 0;
@@ -68,6 +68,8 @@
 
   // The Game Object
   const gameObject = (function(){
+
+    // Call both player from the prototype player object
     function gameObject() {
       this.players = [
         new playerObject("playerOne", 0, false),
@@ -77,17 +79,23 @@
       this.board = [0,0,0,0,0,0,0,0,0];
     }
 
+    // The game object itself
     gameObject.prototype = {
-      // Initialize a new game
-      init : function () {
+
+      // This method:
+        // Add both player.
+        // Termine the first player as the current player
+        // Empty the board game
+      initializeGame : function() {
         this.playerOne = this.players[0].name;
         this.playerTwo = this.players[1].name;
         this.currentPlayer = 1;
         this.board = [0,0,0,0,0,0,0,0,0];
-      }, // end: init Method
+      }, // end: initializeGame Method
 
+      // Define the maximun number of moves possible
       numberOfMovesLeft : function() {
-        var count = 0;
+        let count = 0;
         for (let i = 0; i < this.board.length; i++) {
           if (this.board[i] === 0) {
             count++;
@@ -96,7 +104,7 @@
         return count;
       }, // end: numberOfMovesLeft
 
-
+      // This method helps to check quicker if the boar cells situation
       verifyTheCells : function(c1, c2, c3) {
         return (
           (this.board[c1] === this.board[c2])
@@ -106,9 +114,9 @@
       }, // end: verifyTheCells
 
 
+      // Define the winning situation according the cells which are not empty
       winningSituation : function() {
-        var win = 0;
-
+        let win = 0;
         if (this.verifyTheCells(0, 1, 2)) {
           win = this.board[1];
         } else if (this.verifyTheCells(3, 4, 5)) {
@@ -131,11 +139,12 @@
       }, // end: winningSituation
 
 
-      playMove : function(aMove) {
-        if ((aMove >=0 && aMove <=8) && (this.board[aMove] === 0)) {
-          this.board[aMove] = this.currentPlayer;
-          const status = this.winningSituation();
 
+      // Define which players should be playing and the possible winning or not winning situation
+      turningMove : function(playerMove) {
+        if ((playerMove >=0 && playerMove <=8) && (this.board[playerMove] === 0)) {
+          this.board[playerMove] = this.currentPlayer;
+          const status = this.winningSituation();
           if (status === 0) {
             if (this.numberOfMovesLeft() > 0) {
               if (this.currentPlayer === 1) {
@@ -151,13 +160,13 @@
             this.players[status-1].score++;
             return status;
           }
-
         } else {
           return 9;
         }
       }, // end: playMove
 
-      pickAiMove : function() {
+      // If the computer is playing, define what to do with it by lets it playing a random move
+      computerMove : function() {
         var availMoves = [];
         for (var i = 0; i < this.board.length; i++) {
           if (this.board[i] === 0) {
@@ -165,46 +174,50 @@
           }
         }
         return availMoves[Math.floor(Math.random() * availMoves.length)];
-      }
+      } // end: computerMove
     };
     return gameObject;
   })();
 
 
-  const ttt = new gameObject();
-  function gameStart() {
+  const ticTacToeGame = new gameObject();
+
+  // This method starts the game
+  function startingTheGame() {
     // Initialise the game
-    ttt.init();
+    ticTacToeGame.initializeGame();
+    // Append the elements to thhe body
     $('body div').remove();
     $('body').append(htmlBoard);
     $('.players span').remove();
-    $('#player1').prepend('<span>' + ttt.playerOne + '</span>');
-    $('#player2').prepend('<span>' + ttt.playerTwo + '</span>');
+    // Show the name of both players
+    $('#player1').prepend('<span>' + ticTacToeGame.playerOne + '</span>');
+    $('#player2').prepend('<span>' + ticTacToeGame.playerTwo + '</span>');
     $('.box').attr('class', 'box');
     $('.box').css('background-image', '');
-    // Activate the first player
+    // Start the game with the first player
     activatePlayer(1);
   }
 
 
-  /**
-   * Ends the current game
-   */
-  function gameEnd(status) {
+  // This methods shows the end screen when the game is done
+  function endingTheGame(status) {
+    // Add the element to the body
     $('body div').remove();
     $('body').append(winningView);
 
-    var screen = '';
-    var message = '';
+    // Defining the variables needed
+    let screen = '';
+    let message = '';
 
     switch (status) {
       case 1:
         screen = 'screen-win-one';
-        message = ttt.playerOne + ' Won!';
+        message = ticTacToeGame.playerOne + ' Won!';
         break;
       case 2:
         screen = 'screen-win-two';
-        message = ttt.playerTwo + ' Won!';
+        message = ticTacToeGame.playerTwo + ' Won!';
         break;
       case 3:
         screen = 'screen-win-tie';
@@ -212,23 +225,21 @@
         break;
     }
 
-    // Display the corrent winning screen and add button behaviour
+    // Then display the ending message
     $('.message').text(message);
     $('.screen').addClass(screen);
     $('.button').click(function() {
-      gameStart();
+      startingTheGame();
     });
   }
 
-
-  /**
-   * Selects the current player
-   */
+  // Add style to the active player and remove style the unactive one
   function activatePlayer(p) {
-    var $playerId = '',
-        $playerImage = '',
-        $playerClass = '';
+    let $playerId;
+    let $playerImage;
+    let $playerClass;
 
+    // Add the styles for both players (the icon, the id and the hover statement)
     if (p === 1) {
       $playerId = '#player1';
       $playerImage = 'img/o.svg';
@@ -245,31 +256,25 @@
     $('.boxes li').unbind('mouseenter mouseleave');
     $('.boxes li').unbind('click');
 
-    ////
-    /// Multiplayer behaviour
-    //
-    if (ttt.players[p-1].name !== "Computer"){
 
-      // Bind hover effect for the current user if not computer
+    // When two players are playing together
+    if (ticTacToeGame.players[p-1].name !== "Computer"){
+
+      // Add a hover effect for the current player
       $('.boxes li:not(.box-filled-1, .box-filled-2, .box-filled-ai)').hover(function() {
         $(this).css('background-image', 'url(' + $playerImage + ')');
       }, function() {
         $(this).css('background-image', '');
       });
-
-      // Make a move when the current player clicks an available cell
       $('.boxes li:not(.box-filled-1, .box-filled-2, .box-filled-ai)').click(function() {
-
-        // Make the move, update the UI and check for winners
-        var gameStatus = ttt.playMove($(this).index());
+        // When a move is made, update the grid
+        var gameStatus = ticTacToeGame.turningMove($(this).index());
         $(this).addClass($playerClass);
         $(this).unbind('mouseenter mouseleave');
 
-        // If the game has finished (status 1, 2 or 3), end the game
+        // When a winning situation occurs
         if (gameStatus > 0 && gameStatus !== 9) {
-          gameEnd(gameStatus);
-          // Or activate the other player in multi player mode or
-          // Make the computer move
+          endingTheGame(gameStatus);
         } else {
           if (p === 1) {
             activatePlayer(2);
@@ -279,53 +284,33 @@
         }
       });
 
-    ////
-    /// Single player behaviour, always for player 2
-    //
+    // When there is only one player
     } else {
-      var AiMove = ttt.pickAiMove();
-      // Slow delay to simulate intense computation behind the scene
-      // ... consider suggesting a more powerful computer and moan about limited resources
-      setTimeout(function() {
-        $('.box').eq(AiMove).addClass('box-filled-ai').css('background-image', 'url(' + $playerImage + ')');
-        // Make the move and handle possible win situations
-        var gameStatus = ttt.playMove(AiMove);
-        // If the game has finished (status 1, 2 or 3), end the game
-        if (gameStatus > 0) {
-          gameEnd(gameStatus);
-        // Or give control back to the player
-        } else {
-          // Wait for animations to complete before giving control back to human player
-          setTimeout(function() {
-            activatePlayer(1);
-          }, 200);
-        }
-      }, 300);
+    const AiMove = ticTacToeGame.computerMove();
+      $('.box').eq(AiMove).addClass('box-filled-ai').css('background-image', 'url(' + $playerImage + ')');
+      const gameStatus = ticTacToeGame.turningMove(AiMove);
+      if (gameStatus > 0) {
+        endingTheGame(gameStatus);
+      } else {
+          activatePlayer(1);
+      }
     }
   }
 
 
-/**
- * Game initialisation
- * Removes any content from the page and displays
- * the start a new game screen allowing the user to select
- * the option of playing against another user or the computer.
- */
-
-  // Remove all screens, load the start screen and hide all
-  // unnecessary elements from view
+  // Restart the game from the beginning
   $('body div').remove();
   $('body').append(startView);
   $('.player-names').hide();
   $('.btn-start').hide();
 
-  // If the user chosses a human oponent, ask for both their names
+  // When there are two human players, ask for their names
   $('.btn-opp-human').click(function() {
     $('.button').hide();
     $('#start p').hide();
     $('.btn-start').show();
     $('.player-names').show().children().first().focus();
-    // Start game if pressing Enter in the 2nd field
+    // Then start the game
     $('#playerTwo-name').keyup(function(e) {
       if (e.which === 13) {
         $('.btn-start').trigger('click');
@@ -333,7 +318,7 @@
     });
   });
 
-  // If the user chosses a computer oponent, ask for a single name
+  // When only the computer is choosen
   $('.btn-opp-computer').click(function() {
     $('.button').hide();
     $('#start p').hide();
@@ -351,9 +336,9 @@
   // Start the game when clicking the start button
   $('.btn-start').click(function() {
     // Grab the players names before starting the game
-    ttt.players[0].name = $('.player-names input').eq(0).val() !== "" ? $('.player-names input').eq(0).val() : "Player One";
-    ttt.players[1].name = $('.player-names input').eq(1).val() !== "" ? $('.player-names input').eq(1).val() : "Player Two";
-    gameStart();
+    ticTacToeGame.players[0].name = $('.player-names input').eq(0).val() !== "" ? $('.player-names input').eq(0).val() : "Player One";
+    ticTacToeGame.players[1].name = $('.player-names input').eq(1).val() !== "" ? $('.player-names input').eq(1).val() : "Player Two";
+    startingTheGame();
   });
 
 })();
