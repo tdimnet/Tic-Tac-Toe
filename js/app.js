@@ -1,6 +1,10 @@
 (function() {
 
   // The three view needed to play the game
+
+  // The start screen where the player can:
+    // Choose their name
+    // Choose to player either again an other human or a computer
   const startScreen = `
     <div class="screen screen-start" id="start">
       <header>
@@ -17,6 +21,9 @@
     </div>
   `;
 
+  // The view which displays:
+    // The winner status
+    // The possibility to play a new game
   const winScreen = `
     <div class="screen screen-win" id="finish">
       <header>
@@ -27,6 +34,10 @@
     </div>
   `;
 
+
+  // The view which displays:
+    // The icons for both players
+    // The grid of boxes
   const boardScreen = `
     <div class="board" id="board">
       <header>
@@ -51,8 +62,98 @@
   `;
 
 
-  const body = document.querySelector('body')
-  body.innerHTML = boardScreen
+  // The Player Object
+  const playerObject = (function() {
+    function playerObject(initialState, initialScore) {
+      this.name = initialName || "None";
+      this.score = initialScore || 0;
+    }
+
+    playerObject.prototype = {
+
+    };
+
+    return playerObject;
+  })(); // End: playerObject
+
+
+
+  // The Game Object
+  const gameObject = (function() {
+
+    // The game object squeletton
+    function gameObject() {
+      this.players = [
+        new playerObject("playerOne", 0, false),
+        new playerObject("playerTwo", 0, false)
+      ];
+      this.currentPlayer = 1;
+      this.board = [0,0,0,0,0,0,0,0,0];
+    }
+
+
+    gameObject.prototype = {
+
+      // Initialize a new game
+      init: function() {
+        this.playerOne = this.players[0].name;
+        this.playerTwo = this.players[1].name;
+        this.currentPlayer = 1;
+        this.board = [0,0,0,0,0,0,0,0,0];
+      }, // end: init method
+
+      // The number of moves left before the game is done
+      numberOfMovesLeft: function() {
+        var count = 0;
+        for (let = 0; i < this.board.length; i++) {
+          if (this.board[i] === 0) {
+            count++;
+          }
+        }
+        return count;
+      }, // end: numberOfMovesLeft method
+
+      // Helper function which checks if the cells are the same
+      checkCells: function(c1, c2, c3) {
+        return (
+          (this.board[c1] === this.board[c2])
+          && (this.board[c2] === this.board[c3])
+          && (this.board[c1] > 0));
+      }, // end: checkCells
+
+      winningSituation : function() {
+        var win = 0;
+
+          // Horizontal check
+        if (this.checkCells(0, 1, 2)) {
+          win = this.board[1];
+        } else if (this.checkCells(3, 4, 5)) {
+          win = this.board[3];
+        } else if (this.checkCells(6, 7, 8)) {
+          win = this.board[6];
+          // Vertical check
+        } else if (this.check(0, 3, 6)) {
+          win = this.board[0];
+        } else if (this.check(1, 4, 7)) {
+          win = this.board[1];
+        } else if (this.check(2, 5, 8)) {
+          win = this.board[2];
+          // Diagonal check
+        } else if (this.check(0, 4, 8)) {
+          win = this.board[0];
+        } else if (this.check(2, 4, 6)) {
+          win = this.board[2];
+        }
+
+        return win;
+      }, // end: winningSituation
+
+
+    }
+
+
+
+  })(); // End: gameObject
 
 
 })();
